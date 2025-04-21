@@ -17,7 +17,7 @@ class PontoDeAcesso(models.Model):
     data_cancelamento = models.DateTimeField(null=True)
     endereco = models.TextField()
     plano = models.CharField(max_length=4, choices=PLANOS, default=10)
-    ativo = models.BooleanField(default=True)
+    status = models.BooleanField(default=True)
 
 class Cliente(models.Model):
     
