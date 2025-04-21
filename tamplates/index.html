@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+
+{% load static %}
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -35,34 +37,30 @@
 
   <h1>Lista de Pontos de Acesso</h1>
 
+
   <table>
     <thead>
       <tr>
         <th>ID</th>
-        <th>Nome</th>
         <th>Endereço</th>
         <th>Status</th>
+        <th>Plano</th>
+        <th>Cliente</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>001</td>
-        <td>AP-Casa-01</td>
-        <td>Rua das Flores, 123</td>
-        <td>Ativo</td>
-      </tr>
-      <tr>
-        <td>002</td>
-        <td>AP-Casa-02</td>
-        <td>Av. Brasil, 456</td>
-        <td>Inativo</td>
-      </tr>
-      <tr>
-        <td>003</td>
-        <td>AP-Casa-03</td>
-        <td>Rua Verde, 789</td>
-        <td>Ativo</td>
-      </tr>
+      {% if pontos_acesso %}
+        {% for pontos in pontos_acesso %}
+          <tr>
+            <td>{{ pontos.id }}</td>
+            <td>{{ pontos.endereco }}</td>
+            <td>{{ pontos.status }}</td>
+            <td>{{ pontos.plano }}</td>
+            <td>{{ pontos.cliente }}</td>     
+
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
   </table>
 
