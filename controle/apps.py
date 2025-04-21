@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ControleInternoConfig(AppConfig):
+class ControleConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'controle_interno'
+    name = 'controle'

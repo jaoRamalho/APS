@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from controle_interno.models import PontoDeAcesso 
+from controle.models import PontoDeAcesso 
 
 def index(request):
     

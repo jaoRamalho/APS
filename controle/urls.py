@@ -1,6 +1,6 @@
 from django.urls import path
 
-from controle_interno import views
+from controle import views
 
 urlpatterns = [
     path('', views.index, name='index'),

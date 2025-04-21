@@ -1,5 +1,5 @@
 from django.contrib import admin
-from controle_interno.models import PontoDeAcesso, Cliente, Conta
+from controle.models import PontoDeAcesso, Cliente, Conta
 
 class PontoDeAcessoAdmin(admin.ModelAdmin):
     list_display = ['id', 'codigo', 'cliente']
