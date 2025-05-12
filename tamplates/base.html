@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Sistema{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --verde: #2e7d32;
+      --verde-claro: #a5d6a7;
+      --branco: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--branco);
+      padding-top: 60px;
+    }
+
+    nav {
+      background-color: var(--verde);
+      color: var(--branco);
+      padding: 0.8rem 1.5rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+
+    nav .logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    nav .links a {
+      color: var(--branco);
+      text-decoration: none;
+      margin-left: 1rem;
+      font-weight: bold;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    nav .links a:hover {
+      opacity: 0.7;
+    }
+
+    main {
+      padding: 2rem;
+    }
+
+    .logout-form {
+      display: inline;
+    }
+
+    .logout-form button {
+      background: transparent;
+      border: none;
+      color: var(--branco);
+      font-weight: bold;
+      cursor: pointer;
+      margin-left: 1rem;
+    }
+
+    .logout-form button:hover {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Minha Empresa</div>
+    <div class="links">
+      <a href="{% url 'index' %}">Início</a>
+
+      <form action="{% url 'logout' %}" method="post" class="logout-form">
+        {% csrf_token %}
+        <button type="submit">Sair</button>
+      </form>
+    </div>
+  </nav>
+
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+
+</body>
+</html>

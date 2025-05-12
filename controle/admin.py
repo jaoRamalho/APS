@@ -1,5 +1,5 @@
 from django.contrib import admin
-from controle.models import PontoDeAcesso, Cliente, Conta
+from controle.models import *
 
 class PontoDeAcessoAdmin(admin.ModelAdmin):
     list_display = ['id', 'codigo', 'cliente']
@@ -15,3 +15,6 @@ class ContaAdmin(admin.ModelAdmin):
 admin.site.register(PontoDeAcesso, PontoDeAcessoAdmin)
 admin.site.register(Cliente, ClieteAdmin)
 admin.site.register(Conta, ContaAdmin)
+admin.site.register(Equipe)
+admin.site.register(PaginaAcesso)
+admin.site.register(Perfil)
