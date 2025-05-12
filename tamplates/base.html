@@ -128,6 +128,7 @@
     <div class="logo">Minha Empresa</div>
     <div class="links">
       <a href="{% url 'index' %}">Início</a>
+      <a href="{% url 'listar_clientes' %}">Clientes</a>
 
       <form action="{% url 'logout' %}" method="post" class="logout-form">
         {% csrf_token %}

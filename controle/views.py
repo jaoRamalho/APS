@@ -39,19 +39,8 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-
-@equipes_permitidas('Financeiro')
-def pagina_financeiro(request):
-    return render(request, 'financeiro.html')
-
-@equipes_permitidas('Suporte')
-def pagina_suporte(request):
-    return render(request, 'suporte.html')
-
 def acesso_negado(request):
     return render(request, 'acesso_negado.html')
-
-
 
 
 def listar_clientes(request):
