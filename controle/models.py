@@ -20,9 +20,25 @@ class PontoDeAcesso(models.Model):
     status = models.BooleanField(default=True)
 
 class Cliente(models.Model):
+
+    PLANOS = [
+    ("10", "10 megas"),
+    ("10F", "10 Megas Fibre"),
+    ("100", "100 Megas"),
+    ("100F", "100 Megas Fibra"),
+    ("500", "500 Megas"),
+    ("500F", "500 Megas Fibra"),
+    ]
+
+
     
     nome = models.CharField(max_length=100)
+    email = models.EmailField(null=True)
     telefone = models.TextField(max_length=100)
+    endereco = models.TextField()
+    plano = models.CharField(max_length=4, choices=PLANOS, default=10)
+    devendo = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.nome

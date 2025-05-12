@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from controle.models import PontoDeAcesso
+from controle.models import PontoDeAcesso, Cliente
 
 from django.contrib.auth.decorators import login_required
 
@@ -50,3 +50,37 @@ def pagina_suporte(request):
 
 def acesso_negado(request):
     return render(request, 'acesso_negado.html')
+
+
+
+
+def listar_clientes(request):
+    if request.method == "POST":
+        cliente_id = request.POST.get("atualizar")
+        cliente = Cliente.objects.get(id=cliente_id)
+        cliente.nome = request.POST.get(f'nome_{cliente_id}')
+        cliente.email = request.POST.get(f'email_{cliente_id}')
+        cliente.telefone = request.POST.get(f'telefone_{cliente_id}')
+        cliente.endereco = request.POST.get(f'endereco_{cliente_id}')
+        cliente.plano = request.POST.get(f'plano_{cliente_id}')
+        cliente.devendo = f'devendo_{cliente_id}' in request.POST
+        cliente.save()
+        return redirect('listar_clientes')  # redireciona para evitar reenvio do formulário
+    
+
+
+    clientes = Cliente.objects.all()
+    return render(request, 'clientes.html',{'clientes': clientes, 'planos_choices': Cliente.PLANOS})
+
+from .forms import ClienteForm
+
+def adicionar_cliente(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_clientes')  # ajuste conforme sua URL
+    else:
+        form = ClienteForm()
+
+    return render(request, 'adicionar_cliente.html', {'form': form})
