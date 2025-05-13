@@ -55,14 +55,29 @@ class OrdemDeServico(models.Model):
     ]
 
     TIPOS_PRIORIDADE = [
-    ("10", "10 megas"),
-    ("500F", "500 Megas Fibra"),
+    ("B", "Baixa"),
+    ("M", "media"),
+    ("A", "alta"),
+    ("S", "super alta")
+    ]
+
+    STATUS = [
+    ("R", "Realizada"),
+    ("E", "Em andamento"),
+    ("D", "Designada"),
+    ("S", "Especificada")
     ]
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     tipo = models.CharField(max_length=4, choices=TIPOS_OS)
-    prioridade = models.CharField(max_length=4, choices=TIPOS_PRIORIDADE)
-    
+    prioridade = models.CharField(max_length=4, choices=TIPOS_PRIORIDADE, default="B")
+    from datetime import date
+    prazo = models.DateField(default=date.today)
+    descricao = models.TextField(default="")
+    status = models.CharField(max_length=1, choices=STATUS,  default="S")
+    equipe = models.ForeignKey("Equipe", on_delete=models.CASCADE, null=True)
+
+
 
 from django.contrib.auth.models import User
 
