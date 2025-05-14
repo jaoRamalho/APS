@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from controle.models import Cliente, OrdemDeServico, Equipe
+from controle.models import Cliente, OrdemDeServico, Equipe, Perfil, User
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -105,3 +105,25 @@ def adicionar_OS(request):
         form = ClienteForm()
 
     return render(request, 'adicionar_os.html', {'form': form})
+
+
+
+#views de funcionarios 
+#equipes_permitidas('tela_ordens_de_servico')
+def listar_funcionarios(request):
+    if request.method == "POST":
+        perfil_id = request.POST.get("atualizar")
+        perfil = Perfil.objects.get(id=perfil_id)
+        perfil.usuario = User.objects.get(id = request.POST.get(f'user_{perfil_id}'))
+        perfil.equipe = Equipe.objects.get(id = request.POST.get(f'equipe_{perfil_id}'))
+        perfil.cpf = request.POST.get(f'cpf_{perfil_id}')
+        perfil.conta_bancaria = request.POST.get(f'conta_{perfil_id}')
+        perfil.save()
+        return redirect('listar_funcionarios')
+    
+    perfils = Perfil.objects.all()
+    equipes = Equipe.objects.all()
+    return render(request, 'funcionarios.html',{
+        'perfils': perfils,
+        'equipes' : equipes
+    })

@@ -97,6 +97,8 @@ class PaginaAcesso(models.Model):
 class Perfil(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     equipe = models.ForeignKey(Equipe, on_delete=models.CASCADE)
+    cpf = models.CharField(max_length=11, null=True)
+    conta_bancaria = models.CharField(max_length=11)
 
     def __str__(self):
         return f"{self.usuario.username} - {self.equipe.nome}"

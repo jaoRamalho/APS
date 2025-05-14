@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'controle/filtro.css' %}">
+
+{% block content %}
+
+<h1>Lista de Funcionarios</h1>
+
+ <div  class="space-y-8">
+
+    <div  class="mb-8">
+        <div class="mb-4 flex justify-end">
+        <a href="{% url 'adicionar_os' %}" 
+            class="bg-green-600 text-white font-semibold px-5 py-2 rounded-xl hover:bg-green-700 transition shadow">
+        + Adicionar perfil
+        </a>
+        </div>
+    </div>
+
+
+
+
+<div  class="mb-8">
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Equipe</th>
+                    <th>cpf</th>
+                    <th>Conta Bancaria</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for perfil in perfils %}
+                <tr>
+                    <td>{{ perfil.id }}</td>
+                    <td>{{ perfil.usuario.username }}</td>
+
+                    <td>
+                        <select name="equipe_{{ perfil.id }}" required>
+                            {% for equipe in equipes %}
+                                <option value="{{ equipe.id }}" {% if equipe.id == perfil.equipe.id %}selected{% endif %}>
+                                {{ equipe.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="cpf_{{perfil.id}}" value="{{ perfil.cpf}}">
+                    </td>
+                    
+                    <td>
+                        <input type="text" name="conta_{{ perfil.id }}" value="{{ perfil.conta_bancaria }}" required>
+                    </td>
+
+                    <td>
+                        <button type="submit" name="atualizar" value="{{ perfil.id }}">Salvar</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+</div>
+
+
+
+
+{% endblock %}

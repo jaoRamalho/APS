@@ -11,4 +11,5 @@ urlpatterns = [
     path('clientes/adicionar/', views.adicionar_cliente, name='adicionar_cliente'),
     path('ordens-servico/', views.listar_OS, name='listar_os'),
     path('ordens-servico/adicionar', views.adicionar_OS, name='adicionar_os'),
+    path('funcionarios/', views.listar_funcionarios, name='listar_funcionarios'),
 ]
