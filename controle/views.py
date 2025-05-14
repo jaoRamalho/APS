@@ -102,7 +102,38 @@ def listar_OS(request):
         os.save()
         return redirect('listar_os')
     
-    ordens = OrdemDeServico.objects.all()
+    
+
+    # Filtros de busca
+
+    filtros = {}
+    cliente_nome = request.GET.get('cliente')
+    tipo = request.GET.get('tipo')
+    prioridade = request.GET.get('prioridade')
+    status = request.GET.get('status')
+    prazo = request.GET.get('prazo')
+    equipe = request.GET.get('equipe')
+
+    if cliente_nome:
+        filtros['cliente__nome__icontains'] = cliente_nome
+
+    if tipo:
+        filtros['tipo'] = tipo
+
+    if prioridade:
+        filtros['prioridade'] = prioridade
+
+    if status:
+        filtros['status'] = status
+
+    if prazo:
+        filtros['prazo'] = prazo
+
+    if equipe:
+        filtros['equipe__id'] = equipe
+
+    ordens = OrdemDeServico.objects.filter(**filtros)
+
     clientes = Cliente.objects.all()
     equipes = Equipe.objects.all()
     return render(request, 'ordem_servico.html',{
