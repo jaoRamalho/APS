@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from controle.models import Equipe, PaginaAcesso
+from controle.models import Equipe, PaginaAcesso, Perfil, User
 
 class Command(BaseCommand):
     help = 'Cria equipes, páginas e associa as equipes às páginas automaticamente'
@@ -38,5 +38,15 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f'Equipes associadas à página: {pagina_clientes.nome_pagina}'))
         self.stdout.write(self.style.SUCCESS(f'Equipes associadas à página: {pagina_os.nome_pagina}'))
         self.stdout.write(self.style.SUCCESS(f'Equipes associadas à página: {pagina_funcionarios.nome_pagina}'))
+
+        #criando usuario Perfil username:admin senha:admin
+        if not User.objects.filter(username='admin').exists():
+            usuario = User.objects.create_superuser(username='admin', password='admin')
+            Perfil.objects.create(usuario=usuario, equipe=equipe_1)
+            self.stdout.write(self.style.SUCCESS('Usuário e perfil criados com sucesso!'))
+        else:
+            self.stdout.write(self.style.WARNING('Usuário já existe.'))
+
+
 
         self.stdout.write(self.style.SUCCESS('Seed finalizado com sucesso!'))
