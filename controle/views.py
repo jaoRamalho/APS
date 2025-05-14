@@ -8,7 +8,7 @@ from .decorators import equipes_permitidas
 
 from django.contrib.auth.forms import AuthenticationForm
 
-from .forms import ClienteForm
+from .forms import ClienteForm, OrdemDeServicoForm
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -49,8 +49,6 @@ def listar_clientes(request):
         cliente.save()
         return redirect('listar_clientes')  # redireciona para evitar reenvio do formulário
     
-
-
     #filtros
     cliente_nome = request.GET.get('nome')
     plano = request.GET.get('plano')
@@ -64,12 +62,12 @@ def listar_clientes(request):
     if plano:
         filtros['plano'] = plano
 
-    
     if devendo == 'true':
         filtros['devendo'] = True
     elif devendo == 'false':
         filtros['devendo'] = False
-    print("GET params:", request.GET)
+
+
     clientes = Cliente.objects.filter(**filtros)
     return render(request, 'clientes.html',{'clientes': clientes, 'planos_choices': Cliente.PLANOS})
 
@@ -118,12 +116,12 @@ def listar_OS(request):
 #equipes_permitidas('tela_ordens_de_servico')
 def adicionar_OS(request):
     if request.method == 'POST':
-        form = ClienteForm(request.POST)
+        form = OrdemDeServicoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar_os')  # ajuste conforme sua URL
+            return redirect('listar_os') 
     else:
-        form = ClienteForm()
+        form = OrdemDeServicoForm()
 
     return render(request, 'adicionar_os.html', {'form': form})
 
@@ -135,7 +133,6 @@ def listar_funcionarios(request):
     if request.method == "POST":
         perfil_id = request.POST.get("atualizar")
         perfil = Perfil.objects.get(id=perfil_id)
-        perfil.usuario = User.objects.get(id = request.POST.get(f'user_{perfil_id}'))
         perfil.equipe = Equipe.objects.get(id = request.POST.get(f'equipe_{perfil_id}'))
         perfil.cpf = request.POST.get(f'cpf_{perfil_id}')
         perfil.conta_bancaria = request.POST.get(f'conta_{perfil_id}')
