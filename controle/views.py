@@ -176,7 +176,28 @@ def listar_funcionarios(request):
         perfil.save()
         return redirect('listar_funcionarios')
     
-    perfils = Perfil.objects.all()
+    #filtros
+    usuario = request.GET.get('usuario')
+    equipe_id = request.GET.get('equipe')
+    cpf = request.GET.get('cpf')
+    conta_bancaria = request.GET.get('conta_bancaria')
+
+    filtros = {}
+
+    if usuario:
+        filtros['usuario__username__icontains'] = usuario
+
+    if equipe_id:
+        filtros['equipe_id'] = equipe_id  
+
+    if cpf:
+        filtros['cpf__icontains'] = cpf
+
+    if conta_bancaria:
+        filtros['conta_bancaria__icontains'] = conta_bancaria
+
+
+    perfils = Perfil.objects.filter(**filtros)
     equipes = Equipe.objects.all()
     return render(request, 'funcionarios.html',{
         'perfils': perfils,

@@ -31,7 +31,7 @@ class Cliente(models.Model):
     ]
 
 
-    
+
     nome = models.CharField(max_length=100)
     email = models.EmailField(null=True)
     telefone = models.TextField(max_length=100)

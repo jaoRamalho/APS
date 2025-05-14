@@ -8,18 +8,43 @@
 
 <h1>Lista de Funcionarios</h1>
 
- <div  class="space-y-8">
 
-    <div  class="mb-8">
-        <div class="mb-4 flex justify-end">
-        <a href="{% url 'adicionar_os' %}" 
-            class="bg-green-600 text-white font-semibold px-5 py-2 rounded-xl hover:bg-green-700 transition shadow">
-        + Adicionar perfil
-        </a>
-        </div>
+
+<div  class="mb-8">
+    <div class="mb-4 flex justify-end">
+    <a href="{% url 'adicionar_os' %}" 
+        class="bg-green-600 text-white font-semibold px-5 py-2 rounded-xl hover:bg-green-700 transition shadow">
+    + Adicionar perfil
+    </a>
     </div>
+</div>
 
+<div class="bg-white p-4 rounded-xl border border-green-400 shadow mb-6">
+  <form method="get" class="grid grid-cols-1 gap-4 max-w-xl">
+    
+    <input type="text" name="usuario" placeholder="Nome do usuário" value="{{ request.GET.usuario }}"
+           class="border border-green-300 rounded-xl px-3 py-2">
 
+    <select name="equipe" class="border border-green-300 rounded-xl px-3 py-2">
+      <option value="">Todas as equipes</option>
+      {% for equipe in equipes %}
+        <option value="{{ equipe.id }}" {% if request.GET.equipe == equipe.id|stringformat:"s" %}selected{% endif %}>
+          {{ equipe.nome }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <input type="text" name="cpf" placeholder="CPF" value="{{ request.GET.cpf }}"
+           class="border border-green-300 rounded-xl px-3 py-2">
+
+    <input type="text" name="conta_bancaria" placeholder="Conta bancária" value="{{ request.GET.conta_bancaria }}"
+           class="border border-green-300 rounded-xl px-3 py-2">
+
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700 transition">
+      Filtrar
+    </button>
+  </form>
+</div>
 
 
 <div  class="mb-8">
