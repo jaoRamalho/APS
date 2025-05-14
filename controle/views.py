@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from controle.models import Cliente, OrdemDeServico, Equipe
+from controle.models import Cliente, OrdemDeServico, Equipe, Perfil, User
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -8,7 +8,7 @@ from .decorators import equipes_permitidas
 
 from django.contrib.auth.forms import AuthenticationForm
 
-from .forms import ClienteForm
+from .forms import ClienteForm, OrdemDeServicoForm, PerfilForm
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -35,7 +35,8 @@ def acesso_negado(request):
 
 
 #views de clientes
-#equipes_permitidas('tela_clientes')
+@login_required
+@equipes_permitidas('tela_clientes')
 def listar_clientes(request):
     if request.method == "POST":
         cliente_id = request.POST.get("atualizar")
@@ -49,11 +50,30 @@ def listar_clientes(request):
         cliente.save()
         return redirect('listar_clientes')  # redireciona para evitar reenvio do formulário
     
-    clientes = Cliente.objects.all()
+    #filtros
+    cliente_nome = request.GET.get('nome')
+    plano = request.GET.get('plano')
+    devendo = request.GET.get('devendo')
+
+    filtros = {}
+
+    if cliente_nome:
+        filtros['nome__icontains'] = cliente_nome
+
+    if plano:
+        filtros['plano'] = plano
+
+    if devendo == 'true':
+        filtros['devendo'] = True
+    elif devendo == 'false':
+        filtros['devendo'] = False
+
+
+    clientes = Cliente.objects.filter(**filtros)
     return render(request, 'clientes.html',{'clientes': clientes, 'planos_choices': Cliente.PLANOS})
 
-
-#equipes_permitidas('tela_clientes')
+@login_required
+@equipes_permitidas('tela_clientes')
 def adicionar_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST)
@@ -67,8 +87,11 @@ def adicionar_cliente(request):
 
 
 
+
+
 #views de ordem de serviço 
-#equipes_permitidas('tela_ordens_de_servico')
+@login_required
+@equipes_permitidas('tela_ordens_de_servico')
 def listar_OS(request):
     if request.method == "POST":
         os_id = request.POST.get("atualizar")
@@ -83,7 +106,38 @@ def listar_OS(request):
         os.save()
         return redirect('listar_os')
     
-    ordens = OrdemDeServico.objects.all()
+    
+
+    # Filtros de busca
+
+    filtros = {}
+    cliente_nome = request.GET.get('cliente')
+    tipo = request.GET.get('tipo')
+    prioridade = request.GET.get('prioridade')
+    status = request.GET.get('status')
+    prazo = request.GET.get('prazo')
+    equipe = request.GET.get('equipe')
+
+    if cliente_nome:
+        filtros['cliente__nome__icontains'] = cliente_nome
+
+    if tipo:
+        filtros['tipo'] = tipo
+
+    if prioridade:
+        filtros['prioridade'] = prioridade
+
+    if status:
+        filtros['status'] = status
+
+    if prazo:
+        filtros['prazo'] = prazo
+
+    if equipe:
+        filtros['equipe__id'] = equipe
+
+    ordens = OrdemDeServico.objects.filter(**filtros)
+
     clientes = Cliente.objects.all()
     equipes = Equipe.objects.all()
     return render(request, 'ordem_servico.html',{
@@ -94,14 +148,71 @@ def listar_OS(request):
         'equipes' : equipes
     })
 
-#equipes_permitidas('tela_ordens_de_servico')
+@login_required
+@equipes_permitidas('tela_ordens_de_servico')
 def adicionar_OS(request):
     if request.method == 'POST':
-        form = ClienteForm(request.POST)
+        form = OrdemDeServicoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('listar_os')  # ajuste conforme sua URL
+            return redirect('listar_os') 
     else:
-        form = ClienteForm()
+        form = OrdemDeServicoForm()
 
     return render(request, 'adicionar_os.html', {'form': form})
+
+
+
+#views de funcionarios 
+@login_required
+@equipes_permitidas('tela_funcionarios')
+def listar_funcionarios(request):
+    if request.method == "POST":
+        perfil_id = request.POST.get("atualizar")
+        perfil = Perfil.objects.get(id=perfil_id)
+        perfil.equipe = Equipe.objects.get(id = request.POST.get(f'equipe_{perfil_id}'))
+        perfil.cpf = request.POST.get(f'cpf_{perfil_id}')
+        perfil.conta_bancaria = request.POST.get(f'conta_{perfil_id}')
+        perfil.save()
+        return redirect('listar_funcionarios')
+    
+    #filtros
+    usuario = request.GET.get('usuario')
+    equipe_id = request.GET.get('equipe')
+    cpf = request.GET.get('cpf')
+    conta_bancaria = request.GET.get('conta_bancaria')
+
+    filtros = {}
+
+    if usuario:
+        filtros['usuario__username__icontains'] = usuario
+
+    if equipe_id:
+        filtros['equipe_id'] = equipe_id  
+
+    if cpf:
+        filtros['cpf__icontains'] = cpf
+
+    if conta_bancaria:
+        filtros['conta_bancaria__icontains'] = conta_bancaria
+
+
+    perfils = Perfil.objects.filter(**filtros)
+    equipes = Equipe.objects.all()
+    return render(request, 'funcionarios.html',{
+        'perfils': perfils,
+        'equipes' : equipes
+    })
+
+@login_required
+@equipes_permitidas('tela_funcionarios')
+def adicionar_funcionario(request):
+    if request.method == 'POST':
+        form = PerfilForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_funcionarios')
+    else:
+        form = PerfilForm()
+
+    return render(request, 'adicionar_perfil.html', {'form': form})

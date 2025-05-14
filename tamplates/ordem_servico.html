@@ -8,58 +8,84 @@
 
 <h1>Lista de Ordens de Serviço</h1>
 
- <div  class="space-y-8">
 
-    <div  class="mb-8">
-        <div class="mb-4 flex justify-end">
-        <a href="{% url 'adicionar_os' %}" 
-            class="bg-green-600 text-white font-semibold px-5 py-2 rounded-xl hover:bg-green-700 transition shadow">
-        + Adicionar os
-        </a>
-        </div>
+
+<div  class="mb-8">
+    <div class="mb-4 flex justify-end">
+    <a href="{% url 'adicionar_os' %}" 
+        class="bg-green-600 text-white font-semibold px-5 py-2 rounded-xl hover:bg-green-700 transition shadow">
+    + Adicionar os
+    </a>
     </div>
-
-
-
-
-<div>
-    <form method="get" class="form-container">
-        <!-- Filtro por nome -->
-        <div class="input-wrapper">
-            <label for="nome" class="label">Nome</label>
-            <input type="text" id="nome" name="nome" value="{{ request.GET.nome }}" class="input" placeholder="Buscar...">
-        </div>
-
-        <!-- Filtro por status -->
-        <div class="status-wrapper">
-            <label for="status" class="label">Status</label>
-            <select id="status" name="status" class="select">
-                <option value="">Todos</option>
-                {% for value, label in status_choices %}
-                <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <!-- Filtro por devendo -->
-        <div class="devendo-wrapper">
-            <label for="devendo" class="label">Devendo?</label>
-            <select id="devendo" name="devendo" class="select">
-                <option value="">Todos</option>
-                <option value="sim" {% if request.GET.devendo == "sim" %}selected{% endif %}>Sim</option>
-                <option value="nao" {% if request.GET.devendo == "nao" %}selected{% endif %}>Não</option>
-            </select>
-        </div>
-
-        <!-- Botões -->
-        <div class="button-wrapper">
-            <button type="submit" class="button">Filtrar</button>
-            <a href="{% url 'listar_os' %}" class="link-button">Limpar</a>
-        </div>
-    </form>
 </div>
 
+<!-- Botão para expandir/colapsar o filtro -->
+<button id="toggle-filtro" class="text-green-700 bg-gray-200 p-2 rounded-md hover:bg-gray-300">
+  Filtros
+</button>
 
+<div id="filtros" class="bg-white p-6 rounded-2xl shadow border-2 border-green-500 max-w-xl mb-6 mt-4" style="display: none;">
+  <form method="get">
+    <div class="mb-4">
+      <label class="block text-green-800 font-semibold mb-1">Cliente</label>
+      <input type="text" name="cliente" value="{{ request.GET.cliente }}" 
+             class="w-full px-3 py-2 border border-green-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-green-800 font-semibold mb-1">Tipo</label>
+      <select name="tipo" class="w-full px-3 py-2 border border-green-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500">
+        <option value="">--Selecione--</option>
+        <option value="10" {% if request.GET.tipo == "10" %}selected{% endif %}>10 megas</option>
+        <option value="500F" {% if request.GET.tipo == "500F" %}selected{% endif %}>500 Megas Fibra</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-green-800 font-semibold mb-1">Prioridade</label>
+      <select name="prioridade" class="w-full px-3 py-2 border border-green-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500">
+        <option value="">--Selecione--</option>
+        <option value="B" {% if request.GET.prioridade == "B" %}selected{% endif %}>Baixa</option>
+        <option value="M" {% if request.GET.prioridade == "M" %}selected{% endif %}>Média</option>
+        <option value="A" {% if request.GET.prioridade == "A" %}selected{% endif %}>Alta</option>
+        <option value="S" {% if request.GET.prioridade == "S" %}selected{% endif %}>Super Alta</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-green-800 font-semibold mb-1">Status</label>
+      <select name="status" class="w-full px-3 py-2 border border-green-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500">
+        <option value="">--Selecione--</option>
+        <option value="R" {% if request.GET.status == "R" %}selected{% endif %}>Realizada</option>
+        <option value="E" {% if request.GET.status == "E" %}selected{% endif %}>Em andamento</option>
+        <option value="D" {% if request.GET.status == "D" %}selected{% endif %}>Designada</option>
+        <option value="S" {% if request.GET.status == "S" %}selected{% endif %}>Especificada</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-green-800 font-semibold mb-1">Prazo</label>
+      <input type="date" name="prazo" value="{{ request.GET.prazo }}"
+             class="w-full px-3 py-2 border border-green-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-green-800 font-semibold mb-1">Equipe</label>
+      <select name="equipe" class="w-full px-3 py-2 border border-green-400 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500">
+        <option value="">--Selecione--</option>
+        {% for equipe in equipes %}
+          <option value="{{ equipe.id }}" {% if request.GET.equipe == equipe.id %}selected{% endif %}>
+            {{ equipe.nome }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700 transition">
+      Filtrar
+    </button>
+  </form>
+</div>
 
 
 <div  class="mb-8">
@@ -145,7 +171,19 @@
     </form>
 </div>
 
+<script>
+  if (document.getElementById('filtros').style.display === 'none') {
+    document.getElementById('filtros').style.display = 'block';
+  }
 
-
+  document.getElementById('toggle-filtro').addEventListener('click', function () {
+    var filtroDiv = document.getElementById('filtros');
+    if (filtroDiv.style.display === 'none') {
+      filtroDiv.style.display = 'block';
+    } else {
+      filtroDiv.style.display = 'none';
+    }
+  });
+</script>
 
 {% endblock %}
