@@ -35,7 +35,7 @@ def acesso_negado(request):
 
 
 #views de clientes
-#equipes_permitidas('tela_clientes')
+equipes_permitidas('tela_clientes')
 def listar_clientes(request):
     if request.method == "POST":
         cliente_id = request.POST.get("atualizar")
@@ -72,7 +72,7 @@ def listar_clientes(request):
     return render(request, 'clientes.html',{'clientes': clientes, 'planos_choices': Cliente.PLANOS})
 
 
-#equipes_permitidas('tela_clientes')
+equipes_permitidas('tela_clientes')
 def adicionar_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST)
@@ -86,8 +86,10 @@ def adicionar_cliente(request):
 
 
 
+
+
 #views de ordem de serviço 
-#equipes_permitidas('tela_ordens_de_servico')
+equipes_permitidas('tela_ordens_de_servico')
 def listar_OS(request):
     if request.method == "POST":
         os_id = request.POST.get("atualizar")
@@ -144,7 +146,7 @@ def listar_OS(request):
         'equipes' : equipes
     })
 
-#equipes_permitidas('tela_ordens_de_servico')
+equipes_permitidas('tela_ordens_de_servico')
 def adicionar_OS(request):
     if request.method == 'POST':
         form = OrdemDeServicoForm(request.POST)
@@ -159,7 +161,7 @@ def adicionar_OS(request):
 
 
 #views de funcionarios 
-#equipes_permitidas('tela_ordens_de_servico')
+equipes_permitidas('tela_funcionarios')
 def listar_funcionarios(request):
     if request.method == "POST":
         perfil_id = request.POST.get("atualizar")
