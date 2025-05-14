@@ -8,7 +8,7 @@ from .decorators import equipes_permitidas
 
 from django.contrib.auth.forms import AuthenticationForm
 
-from .forms import ClienteForm, OrdemDeServicoForm
+from .forms import ClienteForm, OrdemDeServicoForm, PerfilForm
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -203,3 +203,16 @@ def listar_funcionarios(request):
         'perfils': perfils,
         'equipes' : equipes
     })
+
+@login_required
+@equipes_permitidas('tela_funcionarios')
+def adicionar_funcionario(request):
+    if request.method == 'POST':
+        form = PerfilForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_funcionarios')
+    else:
+        form = PerfilForm()
+
+    return render(request, 'adicionar_perfil.html', {'form': form})

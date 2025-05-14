@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="text-green-700 text-xl font-bold mb-4">Criar Perfil</h2>
+
+<form method="post" class="bg-white p-6 rounded-2xl shadow border-2 border-green-500 max-w-xl">
+  {% csrf_token %}
+  
+  <div class="mb-4">
+    <label class="block text-green-800 font-semibold mb-1">Nome de Usuário</label>
+    {{ form.usuario }}
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-green-800 font-semibold mb-1">Senha</label>
+    {{ form.password }}
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-green-800 font-semibold mb-1">E-mail</label>
+    {{ form.email }}
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-green-800 font-semibold mb-1">Equipe</label>
+    {{ form.equipe }}
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-green-800 font-semibold mb-1">CPF</label>
+    {{ form.cpf }}
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-green-800 font-semibold mb-1">Conta Bancária</label>
+    {{ form.conta_bancaria }}
+  </div>
+
+  <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700 transition">
+    Salvar
+  </button>
+</form>
+{% endblock %}
