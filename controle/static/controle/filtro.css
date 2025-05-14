@@ -1,0 +1,82 @@
+
+.form-container {
+    border: 2px solid #28a745;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+    background-color: white;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-end;
+}
+
+.input-wrapper,
+.status-wrapper,
+.devendo-wrapper,
+.button-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-wrapper {
+    width: 160px;
+}
+
+.status-wrapper,
+.devendo-wrapper {
+    min-width: 180px;
+}
+
+.button-wrapper {
+    min-width: 220px;
+    gap: 0.5rem;
+}
+
+.label {
+    color: #1c7430;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.input,
+.select {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid #28a745;
+    color: #155724;
+    width: 100%;
+    border-radius: 0.75rem;
+}
+
+.button {
+    background-color: #28a745;
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.75rem;
+    width: 100%;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #218838;
+}
+
+.link-button {
+    background-color: white;
+    color: #1c7430;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: 1px solid #28a745;
+    border-radius: 0.75rem;
+    text-align: center;
+    width: 100%;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.link-button:hover {
+    background-color: #f0fdf4;
+}
+

@@ -1,24 +1,14 @@
-from django.shortcuts import render
-from controle.models import PontoDeAcesso
+from django.shortcuts import render, redirect
+from controle.models import Cliente, OrdemDeServico, Equipe
 
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 
 from .decorators import equipes_permitidas
 
-@equipes_permitidas('index')
-def index(request):
-    
-    pontos_acesso = PontoDeAcesso.objects.filter(status=True)
-
-    dados = {
-        'pontos_acesso' : pontos_acesso
-    }
-
-    return render(request, 'index.html', dados) 
-
-from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, logout
+
+from .forms import ClienteForm
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -39,14 +29,79 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-
-@equipes_permitidas('Financeiro')
-def pagina_financeiro(request):
-    return render(request, 'financeiro.html')
-
-@equipes_permitidas('Suporte')
-def pagina_suporte(request):
-    return render(request, 'suporte.html')
-
 def acesso_negado(request):
     return render(request, 'acesso_negado.html')
+
+
+
+#views de clientes
+#equipes_permitidas('tela_clientes')
+def listar_clientes(request):
+    if request.method == "POST":
+        cliente_id = request.POST.get("atualizar")
+        cliente = Cliente.objects.get(id=cliente_id)
+        cliente.nome = request.POST.get(f'nome_{cliente_id}')
+        cliente.email = request.POST.get(f'email_{cliente_id}')
+        cliente.telefone = request.POST.get(f'telefone_{cliente_id}')
+        cliente.endereco = request.POST.get(f'endereco_{cliente_id}')
+        cliente.plano = request.POST.get(f'plano_{cliente_id}')
+        cliente.devendo = f'devendo_{cliente_id}' in request.POST
+        cliente.save()
+        return redirect('listar_clientes')  # redireciona para evitar reenvio do formulário
+    
+    clientes = Cliente.objects.all()
+    return render(request, 'clientes.html',{'clientes': clientes, 'planos_choices': Cliente.PLANOS})
+
+
+#equipes_permitidas('tela_clientes')
+def adicionar_cliente(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_clientes')  # ajuste conforme sua URL
+    else:
+        form = ClienteForm()
+
+    return render(request, 'adicionar_cliente.html', {'form': form})
+
+
+
+#views de ordem de serviço 
+#equipes_permitidas('tela_ordens_de_servico')
+def listar_OS(request):
+    if request.method == "POST":
+        os_id = request.POST.get("atualizar")
+        os = OrdemDeServico.objects.get(id=os_id)
+        os.cliente = Cliente.objects.get(id = request.POST.get(f'cliente_{os_id}'))
+        os.tipo = request.POST.get(f'tipo_{os_id}')
+        os.prioridade = request.POST.get(f'prioridade_{os_id}')
+        os.prazo = request.POST.get(f'prazo_{os_id}')
+        os.descricao = request.POST.get(f'descricao_{os_id}')
+        os.status = request.POST.get(f'status_{os_id}')
+        os.equipe = Equipe.objects.get(id = request.POST.get(f'equipe_{os_id}'))
+        os.save()
+        return redirect('listar_os')
+    
+    ordens = OrdemDeServico.objects.all()
+    clientes = Cliente.objects.all()
+    equipes = Equipe.objects.all()
+    return render(request, 'ordem_servico.html',{
+        'ordens': ordens, 'tipos_choices': OrdemDeServico.TIPOS_OS,
+        'prioridades_choices': OrdemDeServico.TIPOS_PRIORIDADE, 
+        'status_choices': OrdemDeServico.STATUS,
+        'clientes' : clientes,
+        'equipes' : equipes
+    })
+
+#equipes_permitidas('tela_ordens_de_servico')
+def adicionar_OS(request):
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_os')  # ajuste conforme sua URL
+    else:
+        form = ClienteForm()
+
+    return render(request, 'adicionar_os.html', {'form': form})
