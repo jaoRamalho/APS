@@ -49,7 +49,28 @@ def listar_clientes(request):
         cliente.save()
         return redirect('listar_clientes')  # redireciona para evitar reenvio do formulário
     
-    clientes = Cliente.objects.all()
+
+
+    #filtros
+    cliente_nome = request.GET.get('nome')
+    plano = request.GET.get('plano')
+    devendo = request.GET.get('devendo')
+
+    filtros = {}
+
+    if cliente_nome:
+        filtros['nome__icontains'] = cliente_nome
+
+    if plano:
+        filtros['plano'] = plano
+
+    
+    if devendo == 'true':
+        filtros['devendo'] = True
+    elif devendo == 'false':
+        filtros['devendo'] = False
+    print("GET params:", request.GET)
+    clientes = Cliente.objects.filter(**filtros)
     return render(request, 'clientes.html',{'clientes': clientes, 'planos_choices': Cliente.PLANOS})
 
 

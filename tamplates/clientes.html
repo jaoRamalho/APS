@@ -27,11 +27,11 @@
 
         <!-- Filtro por status -->
         <div class="status-wrapper">
-            <label for="status" class="label">Status</label>
-            <select id="status" name="status" class="select">
+            <label for="plano" class="label">plano</label>
+            <select id="plano" name="plano" class="select">
                 <option value="">Todos</option>
-                {% for value, label in status_choices %}
-                <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+                {% for value, label in planos_choices %}
+                <option value="{{ value }}" {% if request.GET.plano == value %}selected{% endif %}>{{ label }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -41,8 +41,8 @@
             <label for="devendo" class="label">Devendo?</label>
             <select id="devendo" name="devendo" class="select">
                 <option value="">Todos</option>
-                <option value="sim" {% if request.GET.devendo == "sim" %}selected{% endif %}>Sim</option>
-                <option value="nao" {% if request.GET.devendo == "nao" %}selected{% endif %}>Não</option>
+                <option value="true" {% if request.GET.devendo == "sim" %}selected{% endif %}>Sim</option>
+                <option value="false" {% if request.GET.devendo == "nao" %}selected{% endif %}>Não</option>
             </select>
         </div>
 
